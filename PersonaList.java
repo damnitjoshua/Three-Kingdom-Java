@@ -4,36 +4,36 @@ import java.util.List;
 import java.util.Comparator;
 
 
-public class CharacterList<E> {
-    private Character<E> head;
-    private Character<E> tail;
+public class PersonaList<E> {
+    private Persona<E> head;
+    private Persona<E> tail;
     private int size;
-    
-    public CharacterList() {
+
+    public PersonaList() {
         size = 0;
         this.head = null;
         this.tail = null;
-        
+
     }
-    
-    public void add(Character<E> character) {
+
+    public void add(Persona<E> Persona) {
         if (head == null) {
-            head = character;
-            tail = character;
+            head = Persona;
+            tail = Persona;
         } else {
-            character.setPrev(tail);
-            tail.setNext(character);
-            tail = character;
+            Persona.setPrev(tail);
+            tail.setNext(Persona);
+            tail = Persona;
         }
         size++;
     }
-    
+
     public int getSize() {
         return size;
     }
-    
+
     public void printList() {
-        Character<E> current = head;
+        Persona<E> current = head;
         while (current != null) {
             System.out.println("Name: " + current.getName());
             System.out.println("Rank: " + current.getRank());
