@@ -1,3 +1,6 @@
+import java.nio.file.Path;
+import java.util.List;
+
 public class main {
     public static void main(String[] args) {
         CaesarCipher cc = new CaesarCipher();
@@ -29,6 +32,50 @@ public class main {
 
         System.out.println("Characters under Chief of Military:");
         chiefMilitary.getChildren().printList();
+
+
+        int[][] matrix = {
+                {1, 1, 0, 0},
+                {1, 0, 0, 0},
+                {1, 0, 1, 1},
+                {1, 0, 0, 0}
+        };
+
+        BattleshipClusters BC = new BattleshipClusters();
+
+        int numClusters = BC.countBattleshipClusters(matrix);
+        System.out.println("Number of clusters: " + numClusters);
+
+        List<int[]> optimalCoordinates = BC.findOptimalCoordinates(matrix);
+        System.out.println("Optimal coordinates for fireball throwing:");
+
+        for (int[] coordinate : optimalCoordinates) {
+            System.out.println("[" + coordinate[0] + ", " + coordinate[1] + "]");
+        }
+
+        PathFinder PF = new PathFinder();
+
+        int[][] maze = {
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1},
+                {1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1},
+                {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+                {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1},
+                {1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+        };
+
+        boolean[][] currentPath = new boolean[maze.length][maze[0].length];
+
+        // Find the path
+        PF.findPath(maze, currentPath);
+
+        // Display the maze with the path
+        PF.displayMaze(maze, currentPath);
     }
 
     private static void assignGenerals(Persona<String>[] generals, Persona<String> chiefManagement, Persona<String> chiefMilitary) {
