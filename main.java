@@ -7,31 +7,78 @@ public class main {
         System.out.println(cc.decrypt("^hkcpzl$^jhv$^jhv$av$bzl$^aol$^johpu$^zayhalnlt,$(ojpod)$pz$av$johpu$opz$(zwpozlsaahi)$dpao$zayvun$pyvu$johpuz."));
 
         // persona
-        Persona<String> emperor = new Persona("Sun Quan", "Emperor", "Cavalry", 96, 98, 72, 77, 95);
-        Persona<String> chiefManagement = new Persona("Zhang Zhao", "Chief of Management", "Archer", 22, 80, 89, 99, 60);
-        Persona<String> chiefMilitary = new Persona("Zhou Yu", "Chief of Military", "Cavalry", 80, 86, 97, 80, 90);
-        Persona<String>[] generals = new Persona[]{
-                new Persona("Xu Sheng", "General", "Archer", 90, 78, 72, 40, 94),
-                new Persona("Zhu Ge Jin", "General", "Archer", 63, 61, 88, 82, 71),
-                new Persona("Lu Su", "General", "Infantry", 43, 87, 84, 88, 53),
-                new Persona("Tai Shi Chi", "General", "Cavalry", 96, 81, 43, 33, 97),
-                new Persona("Xiao Qiao", "General", "Infantry", 42, 52, 89, 77, 34),
-                new Persona("Da Qiao", "General", "Cavalry", 39, 62, 90, 62, 41),
-                new Persona("Zhou Tai", "General", "Infantry", 92, 89, 72, 43, 99),
-                new Persona("Gan Ning", "General", "Archer", 98, 92, 45, 23, 97),
-                new Persona("Lu Meng", "General", "Cavalry", 70, 77, 93, 83, 88),
-                new Persona("Huang Gai", "General", "Infantry", 83, 98, 72, 42, 89)
+        Persona SunQuan = new Persona("Sun Quan", "Cavalry", 96, 98, 72, 77, 95);
+        Persona ZhangZhao = new Persona("Zhang Zhao", "Archer", 22, 80, 89, 99, 60);
+        Persona ZhouYu = new Persona("Zhou Yu", "Cavalry", 80, 86, 97, 80, 90);
+        Persona[] generals = new Persona[]{
+        new Persona("Xu Sheng", "Archer", 90, 78, 72, 40, 94),
+        new Persona("Zhu Ge Jin", "Archer", 63, 61, 88, 82, 71),
+        new Persona("Lu Su", "Infantry", 43, 87, 84, 88, 53),
+        new Persona("Tai Shi Chi", "Cavalry", 96, 81, 43, 33, 97),
+        new Persona("Xiao Qiao", "Infantry", 42, 52, 89, 77, 34),
+        new Persona("Da Qiao", "Cavalry", 39, 62, 90, 62, 41),
+        new Persona("Zhou Tai", "Infantry", 92, 89, 72, 43, 99),
+        new Persona("Gan Ning", "Archer", 98, 92, 45, 23, 97),
+        new Persona("Lu Meng", "Cavalry", 70, 77, 93, 83, 88),
+        new Persona("Huang Gai", "Infantry", 83, 98, 72, 42, 89)
         };
-        emperor.addChild(chiefManagement);
+        
+        TreeNode emperor = new TreeNode(SunQuan);
+        TreeNode chiefMilitary = new TreeNode(ZhangZhao);
+        TreeNode chiefManagement = new TreeNode(ZhouYu);
+        
         emperor.addChild(chiefMilitary);
-
-        assignGenerals(generals, chiefManagement, chiefMilitary);
-
-        System.out.println("Characters under Chief of Management:");
-        chiefManagement.getChildren().printList();
-
-        System.out.println("Characters under Chief of Military:");
-        chiefMilitary.getChildren().printList();
+        emperor.addChild(chiefManagement);
+        
+        LinkedList<TreeNode> newList = new LinkedList<>();
+        //newList is for sorting purpose. if we use general only, discard code below
+        newList.add(chiefManagement);
+        newList.add(chiefMilitary);        
+        
+        //assigning general to their department to create 3 level hierarchy
+        assignGenerals(generals, chiefManagement, chiefMilitary, newList);
+        
+        //show in hierarcy. but i dont know how to make the output show in tree form 
+        emperor.printList();
+        
+        //sorting the list by attribute
+        LinkedList<TreeNode> strength = sortingMethod.sortStrength(new LinkedList<>(newList));
+        LinkedList<TreeNode> leadership = sortingMethod.sortLeadership(new LinkedList<>(newList));
+        LinkedList<TreeNode> intelligence = sortingMethod.sortIntelligence(new LinkedList<>(newList));                
+        LinkedList<TreeNode> politic = sortingMethod.sortPolitic(new LinkedList<>(newList));        
+        LinkedList<TreeNode> hitpoint = sortingMethod.sortHitPoint(new LinkedList<>(newList));
+        
+        
+        //show the general after sorting by atributes        
+        System.out.println("Sort By Strength: ");
+        generalOut (strength);       
+        System.out.println("Sort By Leaderhip: ");
+        generalOut (leadership);    
+        System.out.println("Sort By Intelligence: ");
+        generalOut (intelligence);    
+        System.out.println("Sort By Politic: ");
+        generalOut (politic);    
+        System.out.println("Sort By HitPoint: ");
+        generalOut (hitpoint);
+        
+        
+        
+        //Team formation
+        TeamFormation StrCreator = new TeamFormation(strength);
+        TeamFormation IntelCreator = new TeamFormation(intelligence);
+        TeamFormation LeadCreator = new TeamFormation(leadership);
+        TeamFormation PolCreator = new TeamFormation(politic);
+        
+        //assign team
+        List<List<TreeNode>> StrTeam = StrCreator.teamByAttribute("Strength");                       
+        List<List<TreeNode>> IntelTeam = IntelCreator.teamByAttribute("Intelligence");
+        List<List<TreeNode>> LeadTeam = LeadCreator.teamByAttribute("Leadership");
+        List<List<TreeNode>> PolTeam = PolCreator.teamByAttribute("Politic");
+        
+        printTeam(StrTeam, "Strength");
+        printTeam(IntelTeam, "Intelligence");
+        printTeam(LeadTeam, "Leadership");
+        printTeam(PolTeam, "Politic");
 
 
         int[][] matrix = {
@@ -78,13 +125,62 @@ public class main {
         PF.displayMaze(maze, currentPath);
     }
 
-    private static void assignGenerals(Persona<String>[] generals, Persona<String> chiefManagement, Persona<String> chiefMilitary) {
-        for (Persona<String> general : generals) {
-            if (general.getInt() > general.getStr()) {
-                chiefManagement.addChild(general);
+    //assign the general can be as void but i return as list to kill two bird with one stone 
+    private static LinkedList<TreeNode> assignGenerals(Persona[] generals, TreeNode chiefManagement, TreeNode chiefMilitary, LinkedList newList) {
+        for (Persona general : generals) {
+            TreeNode generalNode = new TreeNode(general);
+            newList.add(generalNode);
+            if (general.getIntelligence() > general.getStrength()) {
+                chiefManagement.addChild(generalNode);
             } else {
-                chiefMilitary.addChild(general);
+                chiefMilitary.addChild(generalNode);
             }
+        }
+                
+        return newList;
+    }
+    
+    //output for the sorting part
+    private static void generalOut (List<TreeNode> general){
+        for (TreeNode node : general) {
+            System.out.println(node.getGeneral());
+        }
+        System.out.println("---------------------------------------");
+    }
+    
+    //output for team
+    private static void printTeam(List<List<TreeNode>> teams, String teamType) {
+        System.out.println("Groups by Total " + teamType + ":");
+        for (int i = 0; i < teams.size(); i++) {
+            System.out.println("Group " + (i + 1) + ":");
+            List<TreeNode> group = teams.get(i);
+            if (group.isEmpty()) {
+                System.out.println("No people in this group.");
+            } else {
+                int totalScore = 0;
+                for (TreeNode person : group) {
+                    String personName = person.getGeneral().getName();
+                    int score = 0;
+                    switch (teamType) {
+                        case "Strength":
+                            score = person.getGeneral().getStrength();
+                            break;
+                        case "Intelligence":
+                            score = person.getGeneral().getIntelligence();
+                            break;
+                        case "Leadership":
+                            score = person.getGeneral().getLeadership();
+                            break;
+                        case "Politic":
+                            score = person.getGeneral().getPolitic();
+                            break;
+                    }
+                    System.out.println("Name: " + personName + ", " + teamType + ": " + score);
+                    totalScore += score;
+                }
+                System.out.println("Total " + teamType + ": " + totalScore);
+            }
+            System.out.println();
         }
     }
 }
