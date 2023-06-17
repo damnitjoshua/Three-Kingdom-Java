@@ -48,7 +48,6 @@ public class main {
         LinkedList<TreeNode> politic = sortingMethod.sortPolitic(new LinkedList<>(newList));        
         LinkedList<TreeNode> hitpoint = sortingMethod.sortHitPoint(new LinkedList<>(newList));
         
-        
         //show the general after sorting by atributes        
         System.out.println("Sort By Strength: ");
         generalOut (strength);       
@@ -61,7 +60,40 @@ public class main {
         System.out.println("Sort By HitPoint: ");
         generalOut (hitpoint);
         
+        System.out.print("Enter the attribute name (Strength, Intelligence, Leadership, Politic, HitPoint): ");
+        String attributeName = key.nextLine();
+        System.out.print("Enter the attribute value: ");
+        int attributeValue = key.nextInt();
         
+        LinkedList<TreeNode> searchResult = new LinkedList<>();
+        
+        switch(attributeName.toLowerCase()){
+            case "strength":
+                searchResult = sortingMethod.searchGeneralByAttribute(strength, attributeName, attributeValue);
+                break;
+            case "intelligence":
+                searchResult = sortingMethod.searchGeneralByAttribute(intelligence, attributeName, attributeValue);
+                break;
+            case "leadership":
+                searchResult = sortingMethod.searchGeneralByAttribute(leadership, attributeName, attributeValue);
+                break;
+            case "politic":
+                searchResult = sortingMethod.searchGeneralByAttribute(politic, attributeName, attributeValue);
+                break;
+            case "hitpoint":
+                searchResult = sortingMethod.searchGeneralByAttribute(hitpoint, attributeName, attributeValue);
+                break;
+        }
+
+        if (searchResult.isEmpty()) {
+            System.out.println("\nNo general with the specified attribute value found.");
+        } else {
+            System.out.println("\nGenerals with the specified attribute value:");
+            for (TreeNode node : searchResult) {
+                System.out.println(node.getGeneral().getName());
+            }
+        }
+        System.out.println();
         
         //Team formation
         TeamFormation StrCreator = new TeamFormation(strength);
