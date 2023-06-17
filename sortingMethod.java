@@ -138,5 +138,72 @@ public class sortingMethod {
         return merged;
     }
 
+    // Binary search to find generals with specific attribute value
+    public static LinkedList<TreeNode> searchGeneralByAttribute(LinkedList<TreeNode> list, String attributeName, int attributeValue) {
+        LinkedList<TreeNode> result = new LinkedList<>();
     
+        int left = 0;
+        int right = list.size() - 1;
+    
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            TreeNode currentNode = list.get(mid);
+    
+            int currentAttributeValue = 0;
+    
+            // Compare the attribute value based on the attribute name
+            switch (attributeName.toLowerCase()) {
+                case "strength":
+                    currentAttributeValue = currentNode.getGeneral().getStrength();
+                    break;
+                case "intelligence":
+                    currentAttributeValue = currentNode.getGeneral().getIntelligence();
+                    break;
+                case "leadership":
+                    currentAttributeValue = currentNode.getGeneral().getLeadership();
+                    break;
+                case "politic":
+                    currentAttributeValue = currentNode.getGeneral().getPolitic();
+                    break;
+                case "hitpoint":
+                    currentAttributeValue = currentNode.getGeneral().getHitPoint();
+                    break;
+                default:
+                    System.out.println("Invalid attribute name");
+                    return result;
+            }
+    
+            if (currentAttributeValue == attributeValue) {
+                // Find the range of indices with the matching attribute value
+                int startIndex = mid;
+                int endIndex = mid;
+    
+                // Check the previous elements
+                while (startIndex > left && list.get(startIndex - 1).getGeneral().getIntelligence() == attributeValue) {
+                    startIndex--;
+                }
+    
+                // Check the following elements
+                while (endIndex < right && list.get(endIndex + 1).getGeneral().getIntelligence() == attributeValue) {
+                    endIndex++;
+                }
+    
+                // Add the generals within the range to the result list
+                for (int i = startIndex; i <= endIndex; i++) {
+                    result.add(list.get(i));
+                }
+    
+                // Exit the loop since we have found all matching generals
+                break;
+            }
+    
+            if (currentAttributeValue < attributeValue) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    
+        return result;
+    }
 }
